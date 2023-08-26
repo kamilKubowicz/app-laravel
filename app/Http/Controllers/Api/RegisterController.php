@@ -7,6 +7,7 @@ use App\Http\Requests\RegisterRequest;
 use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class RegisterController extends Controller
@@ -26,10 +27,22 @@ class RegisterController extends Controller
             'password' => $request->password,
             'role' => $request->role ?? User::ROLE_USER,
         ];
-        $this->userRepository->create($attributes);
+        try {
+            $user = $this->userRepository->create($attributes);
 
-        return response()->json([
-            'message' => 'Registration successful'
-        ]);
+            return response()->json(
+                [
+                    'message' => 'Registration successful.',
+                    'token' => $user->createToken('API TOKEN')->plainTextToken
+                ]
+            );
+        } catch (\Exception $e) {
+            return response()->json(
+                [
+                    'message' => 'Registration failed.'
+                ],
+                Response::HTTP_INTERNAL_SERVER_ERROR
+            );
+        }
     }
 }

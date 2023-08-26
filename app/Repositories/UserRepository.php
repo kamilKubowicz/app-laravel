@@ -16,4 +16,10 @@ class UserRepository implements UserRepositoryInterface
     {
         return User::create($attributes);
     }
+
+    public function getUserByMail(string $email): ?User
+    {
+       return User::where('email', $email)
+            ->first();
+    }
 }
