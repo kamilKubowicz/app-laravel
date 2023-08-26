@@ -5,21 +5,19 @@ namespace App\Http\Requests;
 
 use App\Http\Requests\FormRequest;
 
-class LoginRequest extends FormRequest
+class UserDeleteOrShowRequest extends FormRequest
 {
     public function rules(): array
     {
         return [
-            'email' => 'required',
-            'password' => 'required',
+            'id' => 'required',
         ];
     }
 
     public function messages(): array
     {
         return [
-            'email.required' => 'The email field is required.',
-            'password.required' => 'The password field is required.',
+            'id.required' => 'The id field is required.',
         ];
     }
 }

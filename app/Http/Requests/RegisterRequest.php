@@ -2,11 +2,7 @@
 declare(strict_types=1);
 
 namespace App\Http\Requests;
-
-use Illuminate\Foundation\Http\FormRequest;
-use Illuminate\Contracts\Validation\Validator;
-use Illuminate\Http\Exceptions\HttpResponseException;
-
+use App\Http\Requests\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
@@ -17,7 +13,7 @@ class RegisterRequest extends FormRequest
             'email' => 'required|email',
             'password' => 'required|min:6',
             'c_password' => 'required|same:password',
-            'role' => 'nullable|in:user,admin,superAdmin,editor',
+            'role' => 'nullable|in:user,admin,editor',
         ];
     }
 
@@ -33,15 +29,7 @@ class RegisterRequest extends FormRequest
             'password.min' => 'The password must be at least :min characters.',
             'c_password.required' => 'The confirm password field is required.',
             'c_password.same' => 'The confirm password must match the password.',
-            'role.in' => 'The role must be one of: user, admin, superAdmin.',
+            'role.in' => 'The role must be one of: user, admin.',
         ];
-    }
-
-    protected function failedValidation(Validator $validator)
-    {
-        throw new HttpResponseException(response()->json([
-            'message' => 'Validation failed',
-            'errors' => $validator->errors(),
-        ], 422));
     }
 }

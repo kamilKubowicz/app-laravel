@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Api\RegisterController;
@@ -17,7 +18,12 @@ use App\Http\Controllers\Api\LoginController;
 
 Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
-Route::get('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
+Route::post('/users/edit', [UserController::class, 'edit'])->middleware('auth:sanctum');
+Route::post('/users/remove', [UserController::class, 'remove'])->middleware('auth:sanctum');
+Route::post('/users/new', [UserController::class, 'nwq'])->middleware('auth:sanctum');
+
+Route::get('/users/index', [UserController::class, 'index'])->middleware('auth:sanctum');
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();

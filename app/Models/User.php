@@ -10,7 +10,6 @@ class User extends Authenticatable
 {
     public const ROLE_USER = 'user';
     public const ROLE_ADMIN = 'admin';
-    public const ROLE_SUPER_ADMIN = 'superAdmin';
     public const ROLE_EDITOR = 'editor';
 
     use Notifiable, HasApiTokens;
@@ -45,4 +44,15 @@ class User extends Authenticatable
     protected $casts = [
         'password' => 'hashed',
     ];
+
+    public function hasAdminPermission(): bool
+    {
+        return $this->role === self::ROLE_ADMIN;
+    }
+
+    public function hasEditorPermission(): bool
+    {
+        $role = $this->role;
+        return  ($role === self::ROLE_ADMIN || $role === self::ROLE_EDITOR);
+    }
 }

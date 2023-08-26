@@ -4,15 +4,15 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Requests\RegisterRequest;
-use App\Interfaces\UserRepositoryInterface;
 use App\Models\User;
+use App\Services\UserService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Response;
 use Illuminate\Routing\Controller;
 
 class RegisterController extends Controller
 {
-    public function __construct(private readonly UserRepositoryInterface $userRepository)
+    public function __construct(private readonly UserService $userService)
     {
     }
 
@@ -28,7 +28,7 @@ class RegisterController extends Controller
             'role' => $request->role ?? User::ROLE_USER,
         ];
         try {
-            $user = $this->userRepository->create($attributes);
+            $user = $this->userService->create($attributes);
 
             return response()->json(
                 [

@@ -24,7 +24,7 @@ class LoginController extends Controller
         $password = $request->password;
         $user = $this->userRepository->getUserByMail($email);
 
-        if(!$user || Hash::check($password, $user->password)) {
+        if(!$user || !Hash::check($password, $user->password)) {
 
             return response()->json(
                 [
@@ -34,11 +34,13 @@ class LoginController extends Controller
             );
         }
         $token = $user->createToken('API TOKEN');
+        $isSpecialUser = $user->role !== 'user';
 
         return response()->json(
             [
-            'access_token' => $token->plainTextToken,
-            'token_type' => 'Bearer'
+                'access_token' => $token->plainTextToken,
+                'token_type' => 'Bearer',
+                'is_special_user' => $isSpecialUser
             ]
         );
     }
