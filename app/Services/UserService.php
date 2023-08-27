@@ -24,9 +24,9 @@ class UserService
     /**
      * @param array<string, string> $attributes
      */
-    public function editUser(array $attributes): User
+    public function editUser(int $id, array $attributes): User
     {
-        $user = $this->getUser((int) $attributes['id']);
+        $user = $this->getUser($id);
 
         $user->email = $attributes['email'] ?? $user->email;
         $user->name = $attributes['name'] ?? $user->name;
@@ -51,7 +51,7 @@ class UserService
         return $this->userRepository->getAll();
     }
 
-    private function getUser(int $id): ?User
+    public function getUser(int $id): ?User
     {
         $user = $this->userRepository->getUserById($id);
         if (!$user) {
