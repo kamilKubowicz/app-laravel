@@ -27,12 +27,9 @@ class UserService
     public function editUser(int $id, array $attributes): User
     {
         $user = $this->getUser($id);
+        $attributes = array_filter($attributes);
 
-        $user->email = $attributes['email'] ?? $user->email;
-        $user->name = $attributes['name'] ?? $user->name;
-        $user->role = $attributes['role'] ?? $user->role;
-
-        $user->save();
+        $user->update($attributes);
 
         return $user;
     }
@@ -59,5 +56,12 @@ class UserService
         }
 
         return $user;
+    }
+
+    public function updateUser(string $email, string $password): void
+    {
+        $user = $this->userRepository->getUserByMail($email);
+
+        $user->update(['password' => $password]);
     }
 }

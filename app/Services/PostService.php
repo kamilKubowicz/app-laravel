@@ -42,12 +42,9 @@ class PostService
     public function editPost(int $id, array $attributes): Post
     {
         $post = $this->getPost($id);
+        $attributes = array_filter($attributes);
 
-        $post->title = $attributes['title'] ?? $post->title;
-        $post->description = $attributes['description'] ?? $post->description;
-        $post->image = $attributes['image'] ?? $post->image;
-
-        $post->save();
+        $post->update($attributes);
 
         return $post;
     }
