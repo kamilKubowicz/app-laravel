@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\Api\PasswordResetController;
 use App\Http\Controllers\Api\PostController;
 use App\Http\Controllers\Api\UserController;
 use Illuminate\Http\Request;
@@ -30,6 +31,11 @@ Route::post('/posts/new', [PostController::class, 'new'])->middleware('auth:sanc
 Route::post('/posts/remove/{id}', [PostController::class, 'remove'])->middleware('auth:sanctum');
 Route::post('/posts/edit/{id}', [PostController::class, 'edit'])->middleware('auth:sanctum');
 Route::get('/posts/index', [PostController::class, 'index']);
+
+
+Route::post('/password_reset/send_email', [PasswordResetController::class, 'sendEmail']);
+Route::post('/password_reset/reset', [PasswordResetController::class, 'resetPassword']);
+Route::get('/password_reset/check_code', [PasswordResetController::class, 'checkResetCode']);
 
 
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
