@@ -28,7 +28,7 @@ class UserController extends BaseController
             }
 
             $users = $this->userService->getAll();
-            return response()->json(
+            return new JsonResponse(
                 [
                     'users' => $users
                 ]
@@ -55,7 +55,7 @@ class UserController extends BaseController
 
             $user = $this->userService->create($attributes);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'User has been added.',
                     'user' => $user
@@ -63,7 +63,7 @@ class UserController extends BaseController
             );
         } catch (\Exception) {
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'An error occurred while adding a user.'
                 ],
@@ -81,7 +81,7 @@ class UserController extends BaseController
             }
             $this->userService->deleteUser((int) $id);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => sprintf('User with id = %d has been removed.', $id)
                 ]
@@ -102,7 +102,7 @@ class UserController extends BaseController
             }
             $editedUser = $this->userService->editUser((int) $id, $request->only('name', 'email', 'role'));
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'User has been edited',
                     'user' => $editedUser

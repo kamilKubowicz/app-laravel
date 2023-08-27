@@ -32,7 +32,7 @@ class PasswordResetController extends BaseController
                 )
             );
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'The link to change your password was sent to your email.'
                 ]
@@ -54,7 +54,7 @@ class PasswordResetController extends BaseController
              );
         }
 
-        return response()->json(
+        return new JsonResponse(
             [
                 'code' => $request->code,
                 'message' => 'The code is valid.'
@@ -77,6 +77,6 @@ class PasswordResetController extends BaseController
 
         $passwordReset->delete();
 
-        return response()->json(['message' => 'Password has been changed.']);
+        return new JsonResponse(['message' => 'Password has been changed.']);
     }
 }

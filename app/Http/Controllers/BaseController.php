@@ -12,7 +12,7 @@ class BaseController extends Controller
 {
     protected function sendPermissionDeniedResponse(): JsonResponse
     {
-        return response()->json(
+        return new JsonResponse(
             [
                 'message' => 'Permission denied.',
             ],
@@ -22,7 +22,7 @@ class BaseController extends Controller
 
     protected function sendError(string $message, int $status): JsonResponse
     {
-        return response()->json(
+        return new JsonResponse(
             [
                 'message' => $message
             ],

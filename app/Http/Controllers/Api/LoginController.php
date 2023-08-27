@@ -26,7 +26,7 @@ class LoginController extends Controller
 
         if(!$user || !Hash::check($password, $user->password)) {
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'Incorrect credentials.',
                 ],
@@ -36,7 +36,7 @@ class LoginController extends Controller
         $token = $user->createToken('API TOKEN');
         $isSpecialUser = $user->role !== 'user';
 
-        return response()->json(
+        return new JsonResponse(
             [
                 'access_token' => $token->plainTextToken,
                 'token_type' => 'Bearer',
@@ -50,7 +50,7 @@ class LoginController extends Controller
         $user = $request->user();
         $user->tokens()->delete();
 
-        return response()->json(
+        return new JsonResponse(
             [
                 'message' => 'You are logged out,'
             ]

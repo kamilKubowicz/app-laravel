@@ -30,14 +30,14 @@ class RegisterController extends Controller
         try {
             $user = $this->userService->create($attributes);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'Registration successful.',
                     'token' => $user->createToken('API TOKEN')->plainTextToken
                 ]
             );
         } catch (\Exception $e) {
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'Registration failed.'
                 ],

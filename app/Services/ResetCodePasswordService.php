@@ -3,12 +3,12 @@ declare(strict_types=1);
 
 namespace App\Services;
 
+use App\Interfaces\ResetCodePasswordRepositoryInterface;
 use App\Models\ResetCodePassword;
-use App\Repositories\ResetCodePasswordRepository;
 
 class ResetCodePasswordService
 {
-    public function __construct(private readonly ResetCodePasswordRepository $resetCodePasswordRepository)
+    public function __construct(private readonly ResetCodePasswordRepositoryInterface $resetCodePasswordRepository)
     {
     }
 

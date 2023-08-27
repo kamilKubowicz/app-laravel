@@ -5,7 +5,6 @@ namespace App\Services;
 
 use App\Interfaces\PostRepositoryInterface;
 use App\Models\Post;
-use Illuminate\Database\Eloquent\Collection;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Pagination\LengthAwarePaginator;

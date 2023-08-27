@@ -4,11 +4,9 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\IdRequest;
 use App\Http\Requests\PaginationRequest;
 use App\Http\Requests\PostEditRequest;
 use App\Http\Requests\PostNewRequest;
-use App\Http\Requests\UserEditRequest;
 use App\Services\PostService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
@@ -29,7 +27,7 @@ class PostController extends BaseController
 
             $posts = $this->postService->getCollection((int) $perPage, (int) $page);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'posts' => $posts,
                 ]
@@ -55,7 +53,7 @@ class PostController extends BaseController
 
             $post = $this->postService->create((int) $user->id, $attributes);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'Post has been created.',
                     'post' => $post
@@ -78,7 +76,7 @@ class PostController extends BaseController
             }
             $this->postService->deletePost((int) $id);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => sprintf('Post with id = %d has been removed.', $id)
                 ]
@@ -110,7 +108,7 @@ class PostController extends BaseController
 
             $post = $this->postService->editPost((int) $id, $attributes);
 
-            return response()->json(
+            return new JsonResponse(
                 [
                     'message' => 'Post has been edited',
                     'post' => $post
