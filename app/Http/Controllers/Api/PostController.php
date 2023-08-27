@@ -4,33 +4,34 @@ declare(strict_types=1);
 namespace App\Http\Controllers\Api;
 
 use App\Http\Controllers\BaseController;
-use App\Http\Requests\RegisterRequest;
+use App\Http\Requests\IdRequest;
+use App\Http\Requests\PaginationRequest;
+use App\Http\Requests\PostEditRequest;
+use App\Http\Requests\PostNewRequest;
 use App\Http\Requests\UserEditRequest;
-use App\Models\User;
-use App\Services\UserService;
+use App\Services\PostService;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
-class UserController extends BaseController
+class PostController extends BaseController
 {
-    public function __construct(private readonly UserService $userService)
+    public function __construct(private readonly PostService $postService)
     {
     }
 
-    public function index(Request $request): JsonResponse
+    public function index(PaginationRequest $request): JsonResponse
     {
         try {
-            $user = $request->user();
-            if (!$user || !$user->hasAdminPermission()) {
-                return $this->sendPermissionDeniedResponse();
-            }
+            $perPage = $request->perPage ?? 10;
+            $page = $request->page ?? 1;
 
-            $users = $this->userService->getAll();
+            $posts = $this->postService->getCollection((int) $perPage, (int) $page);
+
             return response()->json(
                 [
-                    'users' => $users
+                    'posts' => $posts,
                 ]
             );
         } catch (\Exception $e) {
@@ -38,35 +39,31 @@ class UserController extends BaseController
         }
     }
 
-    public function new(RegisterRequest $request): JsonResponse
+    public function new(PostNewRequest $request): JsonResponse
     {
         try {
             $user = $request->user();
-            if (!$user || !$user->hasAdminPermission()) {
+            if (!$user || !$user->hasEditorPermission()) {
                 return $this->sendPermissionDeniedResponse();
             }
 
             $attributes = [
-                'name' => $request->name,
-                'email' => $request->email,
-                'password' => $request->password,
-                'role' => $request->role ?? User::ROLE_USER,
+                'title' => $request->title,
+                'description' => $request->description,
+                'image' => $request->file('image')->store('image')
             ];
 
-            $user = $this->userService->create($attributes);
+            $post = $this->postService->create((int) $user->id, $attributes);
 
             return response()->json(
                 [
-                    'message' => 'User has been added.',
-                    'user' => $user
+                    'message' => 'Post has been created.',
+                    'post' => $post
                 ]
             );
         } catch (\Exception) {
-
-            return response()->json(
-                [
-                    'message' => 'An error occurred while adding a user.'
-                ],
+            return $this->sendError(
+                'An error occurred while adding an article. Try again.',
                 Response::HTTP_INTERNAL_SERVER_ERROR
             );
         }
@@ -76,14 +73,14 @@ class UserController extends BaseController
     {
         try {
             $user = $request->user();
-            if (!$user || !$user->hasAdminPermission()) {
+            if (!$user || !$user->hasEditorPermission()) {
                 return $this->sendPermissionDeniedResponse();
             }
-            $this->userService->deleteUser((int) $id);
+            $this->postService->deletePost((int) $id);
 
             return response()->json(
                 [
-                    'message' => sprintf('User with id = %d has been removed.', $id)
+                    'message' => sprintf('Post with id = %d has been removed.', $id)
                 ]
             );
         } catch (ModelNotFoundException $e) {
@@ -93,19 +90,30 @@ class UserController extends BaseController
         }
     }
 
-    public function edit(UserEditRequest $request, $id): JsonResponse
+    public function edit(PostEditRequest $request, $id): JsonResponse
     {
         try {
             $user = $request->user();
-            if (!$user || !$user->hasAdminPermission()) {
+            if (!$user || !$user->hasEditorPermission()) {
                 return $this->sendPermissionDeniedResponse();
             }
-            $editedUser = $this->userService->editUser((int) $id, $request->only('name', 'email', 'role'));
+
+            $attributes = [
+                'title' => $request->title,
+                'description' => $request->description,
+                'image' => null
+            ];
+
+            if ($request->hasFile('image')) {
+                $attributes['image'] = $request->file('image')->store('image');
+            }
+
+            $post = $this->postService->editPost((int) $id, $attributes);
 
             return response()->json(
                 [
-                    'message' => 'User has been edited',
-                    'user' => $editedUser
+                    'message' => 'Post has been edited',
+                    'post' => $post
                 ]
             );
         } catch (ModelNotFoundException $e) {
