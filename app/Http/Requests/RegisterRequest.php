@@ -6,6 +6,9 @@ use App\Http\Requests\FormRequest;
 
 class RegisterRequest extends FormRequest
 {
+    /**
+     * @return string[]
+     */
     public function rules(): array
     {
         return [
@@ -17,6 +20,9 @@ class RegisterRequest extends FormRequest
         ];
     }
 
+    /**
+     * @return string[]
+     */
     public function messages(): array
     {
         return [

@@ -7,20 +7,24 @@ use App\Http\Requests\FormRequest;
 
 class UserEditRequest extends FormRequest
 {
+    /**
+     * @return string[]
+     */
     public function rules(): array
     {
         return [
-            'id' => 'required',
             'name' => 'nullable|min:3|max:15',
             'email' => 'nullable|email',
             'role' => 'nullable|in:user,admin,editor',
         ];
     }
 
+    /**
+     * @return string[]
+     */
     public function messages(): array
     {
         return [
-            'id.required' => 'The id field is required.',
             'name.min' => 'The name must be at least :min characters.',
             'name.max' => 'The name may not be greater than :max characters.',
             'email.email' => 'The email format is invalid.',
