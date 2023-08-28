@@ -11,7 +11,7 @@ class PostEditRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'title' => 'nullable|string|max:255',
+            'title' => 'nullable|string|min:10|ax:255',
             'description' => 'nullable|string',
             'image' => 'nullable|image|mimes:jpg,png,jpeg,gif,svg|max:2048',
         ];
@@ -25,6 +25,7 @@ class PostEditRequest extends FormRequest
         return [
             'title.string' => 'The title field must be a string.',
             'title.max' => 'The title field cannot be longer than :max characters.',
+            'title.min' => 'The title must be at least :min characters.',
             'description.string' => 'The description field must be a string.',
             'image.image' => 'The file must be an image.',
             'image.mimes' => 'The image must be a file of type: :values.',
