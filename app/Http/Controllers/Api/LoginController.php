@@ -13,7 +13,7 @@ use Illuminate\Support\Facades\Hash;
 
 class LoginController extends Controller
 {
-
+    private const TOKEN_NAME = 'API TOKEN';
     public function __construct(private readonly UserRepositoryInterface $userRepository)
     {
     }
@@ -33,7 +33,7 @@ class LoginController extends Controller
                 Response::HTTP_UNAUTHORIZED
             );
         }
-        $token = $user->createToken('API TOKEN');
+        $token = $user->createToken(self::TOKEN_NAME);
         $isSpecialUser = $user->role !== 'user';
 
         return new JsonResponse(
