@@ -22,23 +22,24 @@ Route::post('/register', [RegisterController::class, 'register']);
 Route::post('/login', [LoginController::class, 'login']);
 Route::post('/logout', [LoginController::class, 'logout'])->middleware('auth:sanctum');
 
-Route::post('/users/edit/{id}', [UserController::class, 'edit'])->middleware('auth:sanctum');
-Route::post('/users/remove/{id}', [UserController::class, 'remove'])->middleware('auth:sanctum');
-Route::post('/users/new', [UserController::class, 'new'])->middleware('auth:sanctum');
-Route::get('/users/index', [UserController::class, 'index'])->middleware('auth:sanctum');
+Route::middleware('auth:sanctum')->group(function () {
+    Route::post('/users/edit/{id}', [UserController::class, 'edit']);
+    Route::post('/users/remove/{id}', [UserController::class, 'remove']);
+    Route::post('/users/new', [UserController::class, 'new']);
+    Route::get('/users/index', [UserController::class, 'index']);
 
-Route::post('/posts/new', [PostController::class, 'new'])->middleware('auth:sanctum');
-Route::post('/posts/remove/{id}', [PostController::class, 'remove'])->middleware('auth:sanctum');
-Route::post('/posts/edit/{id}', [PostController::class, 'edit'])->middleware('auth:sanctum');
+    Route::post('/posts/new', [PostController::class, 'new']);
+    Route::post('/posts/remove/{id}', [PostController::class, 'remove']);
+    Route::post('/posts/edit/{id}', [PostController::class, 'edit']);
+
+    Route::get('/user', function (Request $request) {
+        return $request->user();
+    });
+});
+
 Route::get('/posts/index', [PostController::class, 'index']);
-
 
 Route::post('/password_reset/send_email', [PasswordResetController::class, 'sendEmail']);
 Route::post('/password_reset/reset', [PasswordResetController::class, 'resetPassword']);
 Route::get('/password_reset/check_code', [PasswordResetController::class, 'checkResetCode']);
-
-
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
 
